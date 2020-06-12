@@ -56,8 +56,10 @@ class Admins
 
    function login_admin($adminid)
    {
+      $random_id = rand();
       // Don't trust the php session, we're using our own
-      $query = sprintf("INSERT into `admin_session` (`id`, `admin_id`, `created_on`) VALUES (NULL, '%s', NOW());",
+      $query = sprintf("INSERT into `admin_session` (`id`, `admin_id`, `created_on`) VALUES (%d, '%s', NOW());",
+                       $random_id,
 		       mysql_real_escape_string($adminid));
       if ($res = mysql_query($query))
       {
