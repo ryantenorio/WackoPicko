@@ -10,10 +10,19 @@ $error = False;
 if (isset($_POST['firstname']) && isset($_POST['username']) && isset($_POST['password']) && isset($_POST['againpass']) && isset($_POST['lastname'])
     && $_POST['username'] && $_POST['password'] && $_POST['againpass'] && $_POST['firstname'] && $_POST['lastname'])
 {
+   $password = $_POST['password'];
+   $uppercase = preg_match('@[A-Z]@', $password);
+   $lowercase = preg_match('@[a-z]@', $password);
+   $number    = preg_match('@[0-9]@', $password);
+   $specialChars = preg_match('@[^\w]@', $password);
    if ($_POST['password'] != $_POST['againpass'])
    {
       $flash['error'] = "The passwords do not match. Try again";
       $error = True;
+   }
+   else if(!$uppercase || !$lowercase || !$number || !$specialChars || strlen($password) < 8) {
+      $error = True;
+      $flash['error'] = "Password should be at least 8 characters in length and should include at least one uppercase, one number, one special character.";
    }
    else if ($new_id = Users::create_user($_POST['username'], $_POST['password'], $_POST['firstname'], $_POST['lastname'], False))
    {
@@ -24,7 +33,7 @@ if (isset($_POST['firstname']) && isset($_POST['username']) && isset($_POST['pas
    {
       if (mysql_errno() == 1062)
       {
-	 $flash['error'] = "Username '{$_POST['username']}' is already in use.";
+         $flash['error'] = "Username '{$_POST['username']}' is already in use.";
       }
       $error = True;
    }
