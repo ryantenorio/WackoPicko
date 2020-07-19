@@ -15,9 +15,23 @@ if (!(isset($_GET['key']) && isset($_GET['picid'])))
 }
 
 $user = Users::current_user();
+$user_pics = Pictures::get_purchased_pictures($user['id']);
 $pic = Pictures::get_picture($_GET['picid']);
-
-if ($_GET['key'] != $pic['high_quality'])
+if (!user_pics) {
+   http_redirect(Users::$HOME_URL);
+}
+$pic_owned = False;
+foreach ($user_pics as $user_pic) {
+   if ($user_pic['id'] == $_GET['picid'])
+   {
+      $pic_owned = True;
+   }
+}
+if (!$pic_owned)
+{
+   http_redirect(Users::$HOME_URL);
+}
+if ($_GET['key'] != 'highquality')
 {
    error_404();
 }
