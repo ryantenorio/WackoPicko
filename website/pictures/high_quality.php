@@ -14,6 +14,11 @@ if (!(isset($_GET['key']) && isset($_GET['picid'])))
    error_404();
 }
 
+if ($_GET['key'] != 'highquality')
+{
+   error_404();
+}
+
 $user = Users::current_user();
 $user_pics = Pictures::get_purchased_pictures($user['id']);
 $pic = Pictures::get_picture($_GET['picid']);
@@ -30,10 +35,6 @@ foreach ($user_pics as $user_pic) {
 if (!$pic_owned)
 {
    http_redirect(Users::$HOME_URL);
-}
-if ($_GET['key'] != 'highquality')
-{
-   error_404();
 }
 
 $filepath = "../upload/" . $pic['filename'];
